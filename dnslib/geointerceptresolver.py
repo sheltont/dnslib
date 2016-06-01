@@ -24,7 +24,9 @@ class GeoInterceptResolver(BaseResolver):
     """
 
     DEFAULT_LOCATION = 'CN'
-    OVERSEA_OUTBOUND_GATEWAY = '172.21.175.241'
+    DEFAULT_OVERSEA_OUTBOUND_GATEWAY = '172.21.175.245'
+    CN_OVERSEA_OUTBOUND_GATEWAY = '192.168.200.133'
+
     DEFAULT_TIMEOUT = 5
 
     def __init__(self,address, port, redis_server, redis_port, skip):
@@ -85,13 +87,15 @@ class GeoInterceptResolver(BaseResolver):
                 return reply
             (pref2, host) = self._parse_rdata(reply2.get_a().rdata)
         loc = self._location_from_client(host)
-        if loc != self.DEFAULT_LOCATION:
-            reply = request.reply()
-            zone = "%s\t%s\t%s\t%s\t%s\t%s" % \
-                   (qname, a.ttl, CLASS[a.rclass], QTYPE[a.rtype], pref,
-                    self.OVERSEA_OUTBOUND_GATEWAY)
-            rr = RR.fromZone(zone)[0]
-            reply.add_answer(rr)
+        gw = self.DEFAULT_OVERSEA_OUTBOUND_GATEWAY
+        if loc == 'CN':
+            gw = self.CN_OVERSEA_OUTBOUND_GATEWAY
+
+        reply = request.reply()
+        zone = "%s\t%s\t%s\t%s\t%s\t%s" % \
+                   (qname, a.ttl, CLASS[a.rclass], QTYPE[a.rtype], pref,gw)
+        rr = RR.fromZone(zone)[0]
+        reply.add_answer(rr)
 
         # cache the reply
         self._answer_to_cache(qname, reply.get_a())
