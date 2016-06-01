@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import copy
-
+import os
 from dnslib import RR,QTYPE,RCODE
 from dnslib.server import DNSServer,DNSHandler,BaseResolver,DNSLogger
 
@@ -82,7 +82,13 @@ if __name__ == '__main__':
     if args.zone == '-':
         args.zone = sys.stdin
     else:
-        args.zone = open(args.zone)
+        try:
+            args.zone = open(args.zone)
+        except FileNotFoundError:
+            script_dir = os.path.dirname(__file__)
+            zone_file = os.path.join(script_dir, args.zone)
+            args.zone = open(zone_file)
+
 
     resolver = ZoneResolver(args.zone,args.glob)
     logger = DNSLogger(args.log,args.log_prefix)
