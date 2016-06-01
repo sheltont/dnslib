@@ -24,7 +24,7 @@ class GeoInterceptResolver(BaseResolver):
     """
 
     DEFAULT_LOCATION = 'CN'
-    OVERSEA_OUTBOUND_GATEWAY = '172.21.175.245'
+    OVERSEA_OUTBOUND_GATEWAY = '172.21.175.241'
     DEFAULT_TIMEOUT = 5
 
     def __init__(self,address, port, redis_server, redis_port, skip):
