@@ -1,1 +1,3 @@
 maxminddb-geolite2
+redis
+redis-cache
