@@ -32,6 +32,7 @@ class GeoZoneResolver(BaseResolver):
         for file in zone_files:
             location = self._location_from_suffix(file)
             full_path = join(zonedir, file)
+            print("Processing zone file: %s" % full_path)
             zone = open(full_path)
             self.zones[location] = ZoneResolver(zone, glob)
         self.glob = glob
